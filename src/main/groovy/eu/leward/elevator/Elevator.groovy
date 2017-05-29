@@ -6,6 +6,11 @@ import groovy.transform.CompileStatic
 class Elevator {
 
     int floor
+    /**
+     * A elevator is considered moving when motors are actually moving the elevator or elevetors picks-up / drops-off
+     * passengers before proceeding to another floor.
+     * Or to simplify, moving the elevator is physically moving or has some plan to immediately move after stopping at a floor.
+     */
     boolean moving
     Direction direction
     Collection<PickupCall> pickupCalls = []
@@ -43,14 +48,16 @@ class Elevator {
     }
 
     private Closure<Integer> onMoved = { int movedToFloor ->
-        moving = false
         floor = movedToFloor
         // The good etiquette wants that the people entering the elevator lets the
         // people to exit the elevator first :)
         dropPassengers(floor)
         pickupPassengers(floor)
-        getNextStop().ifPresent { int nextFloor ->
-            moveTo(nextFloor)
+        def nextStop = getNextStop()
+        if(nextStop.isPresent()) {
+            moveTo(nextStop.get())
+        } else {
+            moving = false
         }
         return floor
     }
