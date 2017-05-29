@@ -9,7 +9,11 @@ class Elevator {
     /**
      * A elevator is considered moving when motors are actually moving the elevator or elevetors picks-up / drops-off
      * passengers before proceeding to another floor.
-     * Or to simplify, moving the elevator is physically moving or has some plan to immediately move after stopping at a floor.
+     * Or to simplify, moving means the elevator is physically moving or has some plan to immediately move after stopping at a floor.
+     * <p>The intent behind this definition is to prevent the elevator to immediatly move on user's request
+     * when pickup up or dropping off passengers/</p>
+     * <p>Suggestion: when calling {@link #requestPickup(eu.leward.elevator.PickupCall)} or {@link #requestTrip(int)}
+     *  verify for elevator roadmap instead of having a "moving" attribute. Still, concurrency would have to be taken into account.</p>
      */
     boolean moving
     Direction direction
@@ -54,7 +58,7 @@ class Elevator {
         dropPassengers(floor)
         pickupPassengers(floor)
         def nextStop = getNextStop()
-        if(nextStop.isPresent()) {
+        if (nextStop.isPresent()) {
             moveTo(nextStop.get())
         } else {
             moving = false
