@@ -42,6 +42,7 @@ class Elevator {
 
     private void moveTo(int targetFloor) {
         moving = true
+        direction = (targetFloor > floor) ? Direction.UP : Direction.DOWN
         driveMotors(targetFloor, onMoved)
     }
 
