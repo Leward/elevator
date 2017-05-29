@@ -43,7 +43,7 @@ class Elevator {
     private void moveTo(int targetFloor) {
         moving = true
         direction = (targetFloor > floor) ? Direction.UP : Direction.DOWN
-        driveMotors(targetFloor, onMoved)
+        driveMotors(targetFloor, this.&onMoved)
     }
 
     private void driveMotors(int targetFloor, Closure<Integer> callback) {
@@ -52,7 +52,7 @@ class Elevator {
         Timeout.setTimeout({ callback(targetFloor) }, 5000)
     }
 
-    private Closure<Integer> onMoved = { int movedToFloor ->
+    private int onMoved(int movedToFloor) {
         floor = movedToFloor
         // The good etiquette wants that the people entering the elevator lets the
         // people to exit the elevator first :)
